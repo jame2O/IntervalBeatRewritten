@@ -5,13 +5,16 @@ import Animated, {useAnimatedStyle, useSharedValue, withSpring, withRepeat, Easi
 import { useFonts } from "expo-font";
 //Import components
 import VideoBackground from '../components/VideoBackground';
+import LoginButton from "../components/LoginButton";
 
 
 export default function index() {
   
   //Setup hooks
   const [loaded, error] = useFonts({
-    'BebasNeue-Regular': require('../assets/fonts/BebasNeue-Regular.ttf')
+    'BebasNeue-Regular': require('../assets/fonts/BebasNeue-Regular.ttf'),
+    'Alumni-Sans-Italic': require('../assets/fonts/static/AlumniSans-BoldItalic.ttf'),
+    'Alumni-Sans': require('../assets/fonts/static/AlumniSans-Light.ttf'),
   })
 
   return (
@@ -20,7 +23,9 @@ export default function index() {
         <VideoBackground/>
       </View>
       <View style={styles.foregroundContainer}>
-        <Text style={styles.heading}>Run to the beat. Literally.</Text>
+        <Text style={styles.heading}>RUN TO THE BEAT. LITERALLY.</Text>
+        <Text style={styles.subheading}>Welcome to the exercise music revolution.</Text>
+        <LoginButton />
       </View>
     </View>
     
@@ -31,11 +36,17 @@ const styles = StyleSheet.create({
   foregroundContainer: {
     backgroundColor: 'transparent',
     paddingLeft: 25,
-    bottom: -350
+    bottom: -475
   },
   heading: {
     color: 'black',
-    fontFamily: 'BebasNeue-Regular',
+    fontFamily: 'Alumni-Sans-Italic',
     fontSize: 60,
+    lineHeight: 60,
+  },
+  subheading: {
+    color: 'black',
+    fontFamily: 'Alumni-Sans',
+    fontSize: 30
   }
 })
