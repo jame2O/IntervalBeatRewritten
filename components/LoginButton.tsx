@@ -6,7 +6,7 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withRepeat, Easing} from "react-native-reanimated";
 import { useFonts } from "expo-font";
 
-export default function LoginButton() {
+export default function LoginButton({ onPress, disabled }: any) {
     //Setup hooks
     const [loaded, error] = useFonts({
         'Alumni-Sans-Italic': require('../assets/fonts/static/AlumniSans-BoldItalic.ttf'),
@@ -15,7 +15,8 @@ export default function LoginButton() {
         <View style={styles.buttonContainer}>
             <Pressable
                 style={styles.button}
-                onPress={() => alert("This does nothing... yet!")}
+                onPress={onPress}
+                disabled={disabled}
             >
                 <FontAwesomeIcon icon={faSpotify} />
                 <Text style={styles.buttonText}>Login With Spotify</Text>
