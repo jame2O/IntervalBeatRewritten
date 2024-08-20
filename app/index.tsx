@@ -1,18 +1,22 @@
 //Import requried libs
-import { Text, View, StyleSheet, Button, Dimensions } from "react-native";
+import { Text, View, StyleSheet, Button, Dimensions, Platform } from "react-native";
+import { Link } from "expo-router";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withRepeat, Easing} from "react-native-reanimated";
 import { useFonts } from "expo-font";
 import { useAuthRequest, makeRedirectUri } from 'expo-auth-session';
-//Import components
+import * as SplashScreen from 'expo-splash-screen';
+//Import components & scripts
 import VideoBackground from '../components/VideoBackground';
 import LoginButton from "../components/LoginButton";
-import { discovery } from "expo-auth-session/build/providers/Google";
 import { useEffect } from "react";
+import { fetchProfile, fetchAccessToken } from "@/scripts/loginAuth";
 
+const client_id = 'cc256e16ace249129a34b80bbaaf3636'
+const redirect_uri = 'exp://192.168.1.75:8081'
+const client_secret = 'ab54032ba4954cf2b6282a01933e05f1'
 
 export default function index() {
-  
   //Setup hooks
   const [loaded, error] = useFonts({
     'BebasNeue-Regular': require('../assets/fonts/BebasNeue-Regular.ttf'),
@@ -25,19 +29,31 @@ export default function index() {
   }
   const [request, response, promptAsync] = useAuthRequest(
     {
-    clientId: 'cc256e16ace249129a34b80bbaaf3636',
-    scopes: ['user-read-email', 'playlist-modify-public'],
+    clientId: client_id,
+    scopes: ['user-read-email', 'user-read-private'],
     usePKCE: false,
     redirectUri: makeRedirectUri({
-      native: 'IBRewritten://',
+      native: redirect_uri
     })
   },
     discovery
   );
-
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }), [loaded, error]
   useEffect(() => {
     if (response?.type === 'success') {
-      const { code } = response.params;
+      const fetchData = async () => {
+        const authCode = response.params.code;
+        const accessToken = await fetchAccessToken(authCode, client_id, client_secret, redirect_uri,);
+        const profile = await fetchProfile(accessToken)
+        console.log(profile);
+      }
+      fetchData();
+    } else {
+      console.log(response?.type)
     }
   }, [response]);
 
@@ -66,7 +82,6 @@ const styles = StyleSheet.create({
     bottom: -475
   },
   heading: {
-    color: 'black',
     fontFamily: 'Alumni-Sans-Italic',
     fontSize: 60,
     lineHeight: 60,
