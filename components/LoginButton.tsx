@@ -5,22 +5,26 @@ import { View, Pressable, StyleSheet, Text } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withRepeat, Easing} from "react-native-reanimated";
 import { useFonts } from "expo-font";
+import { Link } from "expo-router";
 
-export default function LoginButton({ onPress, disabled }: any) {
+export default function LoginButton({ onPress, disabled, route }: any) {
     //Setup hooks
     const [loaded, error] = useFonts({
         'Alumni-Sans-Italic': require('../assets/fonts/static/AlumniSans-BoldItalic.ttf'),
     })
     return (
         <View style={styles.buttonContainer}>
-            <Pressable
-                style={styles.button}
-                onPress={onPress}
-                disabled={disabled}
-            >
-                <FontAwesomeIcon icon={faSpotify} />
-                <Text style={styles.buttonText}>Login With Spotify</Text>
-            </Pressable>
+            
+                <Pressable
+                    style={styles.button}
+                    onPress={onPress}
+                    disabled={disabled}
+                >
+                    <FontAwesomeIcon icon={faSpotify} />
+                    <Text style={styles.buttonText}>Login With Spotify</Text>
+                </Pressable>
+            
+            
         </View>
     );
 };
