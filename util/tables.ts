@@ -10,14 +10,14 @@ export const hrIntensityTable = {
 //Format: Zone: {Time in Seconds: Scale}
 //Zone 5 is a special case and is not included in the table.
 export const hrIntensityTimeScaleTable = {
-    'Z3': {
-        900: 1.1,
-        1800: 1.2,
-        3600: 1.3,
-    },
-    'Z4': {
-        900: 1.1,
-        1800: 1.25,
-        2700: 1.45,
-    },
+    'Z3': [
+        [900, 1.1],
+        [1800, 1.2],
+        [3600, 1.3]
+    ],
+    'Z4': [
+        [900, 1.1],
+        [1800, 1.25],
+        [2700, 1.45]
+    ]
 }

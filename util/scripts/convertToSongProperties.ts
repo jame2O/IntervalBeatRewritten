@@ -1,18 +1,17 @@
-//Import required stuff
+//Required stuff
 import { MinMaxRecommendation, TargetRecommendation } from "../types/types";
 import { hrIntensityTable, hrIntensityTimeScaleTable } from "../tables";
 
 //Attempt to best follow figma flowcharts. However bullshittery incoming:
 
 export function convertToSongProperties(heartRate: number, cadence: number, prevHrZone: string, prevCadence: number, time: number) {
-    //Increment time
     time++;
     //Declare needed variables
-    var intensityScore = 0;
-    var zoneChange: string = "";
-    var tempoChange: number;
-    var intensityTempo: number[];
-    for (var zones in hrIntensityTable) {
+    let intensityScore = 0;
+    let zoneChange: string = "";
+    let tempoChange: number;
+    let intensityTempo: number[];
+    for (let zones in hrIntensityTable) {
         if (!hrIntensityTable.hasOwnProperty(zones)) {
             continue;
         }
@@ -27,8 +26,9 @@ export function convertToSongProperties(heartRate: number, cadence: number, prev
         
     }
     //Heart Rate zone comparison. If there's a match, check the time spent in that zone.
+    let scaling = 1
     if (zoneChange == prevHrZone) {
-        checkHrDuration(time, prevHrZone);
+        scaling = checkHrDuration(time, prevHrZone);
     } 
     //Cadence comparison 
     if (cadence >= prevCadence*1.1 || cadence <= prevCadence*0.9) {
@@ -39,15 +39,23 @@ export function convertToSongProperties(heartRate: number, cadence: number, prev
     return [intensityScore, time]
 }
 function checkHrDuration(time: number, zone: string) {
-    for (var zones in hrIntensityTimeScaleTable) {
+    //Check which zone were in, then compare the times with that of the table.
+    //Returns the scaling for intensity score
+    for (let zones in hrIntensityTimeScaleTable) {
+        //Select correct zone
         if (!hrIntensityTable.hasOwnProperty(zones) || zone != zones) {
           continue;
         }
-        var element = hrIntensityTimeScaleTable[zones as keyof typeof hrIntensityTimeScaleTable]
-        for (var timestamp in element) {
-            if (time < Number(timestamp)) {
-                return element[timestamp as keyof typeof element];
+        //Find correct timescale in table.
+        let element = hrIntensityTimeScaleTable[zones as keyof typeof hrIntensityTimeScaleTable]
+        let current = 0;
+        for (let timestamp in element) {
+            if (time < Number(current)) {
+                return timestamp[1];
             }
         }
+        //Return the last element in the array if the time is not bounded (max scaling)
+        return element[element.length-1][1]
+        
     }
 }
