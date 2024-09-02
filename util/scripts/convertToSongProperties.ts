@@ -8,9 +8,10 @@ export function convertToSongProperties(heartRate: number, cadence: number, prev
     time++;
     //Declare needed variables
     let intensityScore = 0;
-    let zoneChange: string = "";
-    let tempoChange: number;
+    let newZone: string = "";
+    let newTempo: number;
     let intensityTempo: number[];
+    //Update current HR zone
     for (let zones in hrIntensityTable) {
         if (!hrIntensityTable.hasOwnProperty(zones)) {
             continue;
@@ -20,22 +21,31 @@ export function convertToSongProperties(heartRate: number, cadence: number, prev
             hrIntensityTable[zones as keyof typeof hrIntensityTable][0] &&
           heartRate < hrIntensityTable[zones as keyof typeof hrIntensityTable][1]
         ) {
-            zoneChange = zones
+            //Update to new zone
+            newZone = zones
             break;
         } 
         
     }
+    //Update the intensity score
+    intensityScore = hrIntensityTable[newZone as keyof typeof hrIntensityTable][2]
     //Heart Rate zone comparison. If there's a match, check the time spent in that zone.
     let scaling = 1
-    if (zoneChange == prevHrZone) {
+    if (newZone == prevHrZone) {
         scaling = checkHrDuration(time, prevHrZone);
-    } 
+        intensityScore = intensityScore * scaling
+    } else {
+
+    }
     //Cadence comparison 
     if (cadence >= prevCadence*1.1 || cadence <= prevCadence*0.9) {
-        tempoChange = cadence;
+        newTempo = cadence;
     } else {
-        tempoChange = prevCadence;
+        newTempo = prevCadence;
     }
+
+
+
     return [intensityScore, time]
 }
 function checkHrDuration(time: number, zone: string) {
@@ -43,19 +53,20 @@ function checkHrDuration(time: number, zone: string) {
     //Returns the scaling for intensity score
     for (let zones in hrIntensityTimeScaleTable) {
         //Select correct zone
-        if (!hrIntensityTable.hasOwnProperty(zones) || zone != zones) {
-          continue;
-        }
-        //Find correct timescale in table.
-        let element = hrIntensityTimeScaleTable[zones as keyof typeof hrIntensityTimeScaleTable]
-        let current = 0;
-        for (let timestamp in element) {
-            if (time < Number(current)) {
-                return timestamp[1];
+        if (!hrIntensityTimeScaleTable.hasOwnProperty(zones) && zone == zones) {
+          //Find correct timescale in table.
+          let timestamps =
+            hrIntensityTimeScaleTable[
+              zones as keyof typeof hrIntensityTimeScaleTable
+            ];
+            for (let i in timestamps) {
+                if (time < timestamps[i][0]) {
+                return timestamps[i][1];
+                }
             }
+            //Return the last element in the array if the time is not bounded (max scaling)
+            return timestamps[timestamps.length - 1][1];
         }
-        //Return the last element in the array if the time is not bounded (max scaling)
-        return element[element.length-1][1]
-        
     }
+    return 1;
 }

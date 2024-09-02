@@ -19,5 +19,5 @@ export const hrIntensityTimeScaleTable = {
         [900, 1.1],
         [1800, 1.25],
         [2700, 1.45]
-    ]
+    ],
 }
