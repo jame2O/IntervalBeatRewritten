@@ -5,9 +5,8 @@ import { View, Pressable, StyleSheet, Text } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, withRepeat, Easing} from "react-native-reanimated";
 import { useFonts } from "expo-font";
-import { Link } from "expo-router";
 
-export default function LoginButton({ onPress, disabled, route }: any) {
+export default function LoginButton({ onPress, disabled }: any) {
     //Setup hooks
     const [loaded, error] = useFonts({
         'Alumni-Sans-Italic': require('../assets/fonts/static/AlumniSans-BoldItalic.ttf'),

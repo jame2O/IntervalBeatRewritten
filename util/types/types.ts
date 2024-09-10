@@ -4,6 +4,17 @@ export type MinMaxRecommendation = {
     seedArtists: string[];
     seedTracks: string[];
     seedGenres: string[];
+    songProperties: MinMaxSongProperties;
+};
+
+export type TargetRecommendation = {
+    seedArtists: string[];
+    seedTracks: string[];
+    seedGenres: string[];
+    songProperties: TargetSongProperties;
+};
+
+export type MinMaxSongProperties = {
     min_acousticness: number;
     max_acousticness: number;
     min_danceability: number;
@@ -19,6 +30,7 @@ export type MinMaxRecommendation = {
     min_liveness: number;
     max_liveness: number;
     min_loudness: number;
+    max_loudness:number;
     min_mode: number;
     max_mode: number;
     min_popularity: number;
@@ -31,12 +43,9 @@ export type MinMaxRecommendation = {
     max_time_signature: number;
     min_valence: number;
     max_valence: number;
-};
+}
 
-export type TargetRecommendation = {
-    seedArtists: string[];
-    seedTracks: string[];
-    seedGenres: string[];
+export type TargetSongProperties = {
     target_acousticness: number;
     target_danceability: number;
     target_duration_ms: number;
@@ -51,4 +60,26 @@ export type TargetRecommendation = {
     target_tempo: number;
     target_time_signature: number;
     target_valence: number;
-};
+}
+
+export type userProfile = {
+    country: string;
+    display_name: string;
+    explicit_content: {
+        filter_enabled: boolean; //Should explicit music be played?
+        filter_locked: boolean; //Explicit filter is locked and user can't change it. (Don't touch..)
+    };
+    id: string;
+    image: {
+        url: string;
+        height: number;
+        width: number;
+    }
+    product: string; //Subcription type (free/premium)
+    uri: string;
+    profileData: profileData;
+}
+export type profileData = {
+    topSongs: string[];
+    topArtists: string[];
+}

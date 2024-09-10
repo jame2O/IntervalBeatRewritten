@@ -13,14 +13,21 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.IBeatRewritten"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.IBeatRewritten"
+      "package": "com.anonymous.IBeatRewritten",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.BLUETOOTH"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -34,6 +41,10 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+      "eas": {
+        "projectId": "842f33b8-475f-4a88-9bc6-d1c0c822d4f8"
+      }
     }
-  }
 }
+
