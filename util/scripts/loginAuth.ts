@@ -1,4 +1,5 @@
-import { profileData, userProfile } from "../types/types";
+import { userProfile } from "../types/types";
+
 export async function fetchAccessToken(authCode: string, client_id: string, client_secret: string, redirect_uri: string): Promise<any> {
     const params = new URLSearchParams();
     params.append("code", authCode);

@@ -1,17 +1,15 @@
 //Import requried libs
 import { Text, View, StyleSheet, Button, Dimensions, Platform } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, {useAnimatedStyle, useSharedValue, withSpring, withRepeat, Easing} from "react-native-reanimated";
-import { processFontFamily, useFonts } from "expo-font";
+import { useFonts } from "expo-font";
 import { useAuthRequest, makeRedirectUri } from 'expo-auth-session';
+import { useEffect } from "react";
+import { fetchProfile, fetchAccessToken } from "@/util/scripts/loginAuth";
 import * as SplashScreen from 'expo-splash-screen';
-import { router} from 'expo-router';
+import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 //Import components, types & scripts
 import VideoBackground from '../components/VideoBackground';
 import LoginButton from "../components/LoginButton";
-import { useEffect } from "react";
-import { fetchProfile, fetchAccessToken } from "@/util/scripts/loginAuth";
-import { userProfile } from "@/util/types/types";
 
 const client_id = 'cc256e16ace249129a34b80bbaaf3636'
 const redirect_uri = 'exp://192.168.1.75:8081'
@@ -44,18 +42,24 @@ export default function Login({navigation}: any) {
       SplashScreen.hideAsync();
     }
   }), [loaded, error]
+
   useEffect(() => {
     if (response?.type === 'success') {
+      //Fetches access token and profile info, including top songs and artists,
+      //then saves profile info to storage.
       const fetchData = async () => {
         const authCode = response.params.code;
         const accessToken = await fetchAccessToken(authCode, client_id, client_secret, redirect_uri);
-        console.log(accessToken)
         const userProfile = await fetchProfile(accessToken);
-        router.setParams({profile: userProfile})
-        
+        try {
+          await AsyncStorage.setItem("user-profile", JSON.stringify(userProfile))
+        } catch (e) {
+          console.error(e)
+        }
       }
       fetchData();
       router.replace('./Home')
+
     } else if (response?.type === "error"){
       alert("Login Failed. Please Try Again")
 

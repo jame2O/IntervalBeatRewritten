@@ -1,30 +1,39 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
-import { welcomeQuotes } from "@/util/misc/welcomeQuotes";
+import { buildQuote } from "@/util/misc/welcomeQuotes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useEffect } from "react";
-import { Pedometer } from "expo-sensors";
-import { useLocalSearchParams } from "expo-router";
-import getSensors from "@/components/SensorConfig";
-import SensorConfig from "@/components/SensorConfig";
 
-let quote = welcomeQuotes[Math.floor(Math.random()*welcomeQuotes.length)]
-const globalParams = useLocalSearchParams();
-
-//Home Page 
-export default function Home({navigation}: any) {
+export default function Home() {
+    const [quote, setQuote] = useState("")
     const [loaded, error] = useFonts({
         'BebasNeue-Regular': require('../assets/fonts/BebasNeue-Regular.ttf'),
         'Alumni-Sans-Italic': require('../assets/fonts/static/AlumniSans-BoldItalic.ttf'),
         'Alumni-Sans-Bold': require('../assets/fonts/static/AlumniSans-Bold.ttf'),
         'Alumni-Sans': require('../assets/fonts/static/AlumniSans-Light.ttf'),
       });
+
+    useEffect(() => {
+        const getUserProfile = async () => {
+            try {
+                const json = await AsyncStorage.getItem("user-profile");
+                
+                if (json != null) {
+                    const profile = JSON.parse(json);
+                    const quote = buildQuote(profile.display_name)
+                    setQuote(quote)
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        getUserProfile()
+    }, [quote]);
+
     return (
         <View>
             <View style={styles.titleBarContainer}>
                 <Text style={styles.title}>{quote}</Text>
-            </View>
-            <View>
-                <Text>{globalParams.profile}</Text>
             </View>
         </View>
     )
@@ -35,7 +44,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        fontFamily: 'Alumni-Sans',
+        fontFamily: 'Alumni-Sans-Italic',
         fontSize: 45,
 
     }
