@@ -7,15 +7,25 @@ import { fetchProfile, fetchAccessToken } from "@/util/scripts/loginAuth";
 import * as SplashScreen from 'expo-splash-screen';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store'
 //Import components, types & scripts
 import VideoBackground from '../components/VideoBackground';
 import LoginButton from "../components/LoginButton";
 
 const client_id = 'cc256e16ace249129a34b80bbaaf3636'
-const redirect_uri = 'exp://192.168.1.75:8081'
+//Needs replacing time everytime device is switched.
+const redirect_uri = 'exp://172.22.46.185:8081'
 const client_secret = 'ab54032ba4954cf2b6282a01933e05f1'
 
+//Save to secure storage base function.
+async function secureSave(key: string, value: string) {
+  await SecureStore.setItemAsync(key, value);
+}
+
 export default function Login({navigation}: any) {
+  secureSave("client_id", client_id);
+  secureSave("client_secret", client_secret);
+  secureSave("redirect_uri", redirect_uri)
   //Setup hooks
   const [loaded, error] = useFonts({
     'BebasNeue-Regular': require('../assets/fonts/BebasNeue-Regular.ttf'),
@@ -45,20 +55,27 @@ export default function Login({navigation}: any) {
 
   useEffect(() => {
     if (response?.type === 'success') {
+      console.log("Login Successful")
       //Fetches access token and profile info, including top songs and artists,
       //then saves profile info to storage.
       const fetchData = async () => {
+        console.log("Fetching data...")
         const authCode = response.params.code;
         const accessToken = await fetchAccessToken(authCode, client_id, client_secret, redirect_uri);
         const userProfile = await fetchProfile(accessToken);
         try {
+          //Save auth code and access code to secure location.
+          secureSave("auth_code", authCode);
+          secureSave("access_token", accessToken)
           await AsyncStorage.setItem("user-profile", JSON.stringify(userProfile))
+          console.log("User profile successfully saved")
+          router.replace('./home')
         } catch (e) {
           console.error(e)
         }
       }
       fetchData();
-      router.replace('./Home')
+      
 
     } else if (response?.type === "error"){
       alert("Login Failed. Please Try Again")

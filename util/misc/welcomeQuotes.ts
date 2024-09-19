@@ -11,7 +11,7 @@ export function buildQuote(user: string) {
     let quote = welcomeQuotes[Math.floor(Math.random()*welcomeQuotes.length)];
     const currentHour = (new Date()).getUTCHours();
     if (currentHour < 12) {
-        tod = "aorning"
+        tod = "morning"
     } else if (currentHour < 18) {
         tod = "afternoon"
     } else {

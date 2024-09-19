@@ -20,11 +20,11 @@ export async function fetchProfile(token: string): Promise<any> {
         method: "GET", headers: { Authorization: `Bearer ${token}`}
     }).then((result) => result.json());
     //Get top 10 songs
-    const userTopSongsRaw = await fetch("https://api.spotify.com/v1/me/top/tracks", {
+    const userTopSongsRaw = await fetch("https://api.spotify.com/v1/me/top/tracks?limit=10", {
         method: "GET", headers: { Authorization: `Bearer ${token}`}
     }).then((result) => result.json());
     //Get top 10 artists
-    const userTopArtistsRaw = await fetch("https://api.spotify.com/v1/me/top/artists", {
+    const userTopArtistsRaw = await fetch("https://api.spotify.com/v1/me/top/artists?limit=10", {
         method: "GET", headers: { Authorization: `Bearer ${token}`}
     }).then((result) => result.json());
     const artistIDs = (userTopArtistsRaw.items).map((a:any) => a.id);

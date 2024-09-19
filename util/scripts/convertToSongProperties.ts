@@ -4,9 +4,7 @@ import { hrIntensityTable, hrIntensityTimeScaleTable, fixedCadenceTempoTable } f
 
 //Attempt to best follow figma flowcharts. However bullshittery incoming:
 
-export function convertToSongProperties(heartRate: number, cadence: number, prevHrZone: string, prevCadence: number, currentTime: number, cadenceMatchingEnabled: boolean) {
-    //Need to update time here.
-
+export function convertToSongProperties(heartRate: number, cadence: number, prevHrZone: string, prevCadence: number, startTime: Date, currentTime: Date, cadenceMatchingEnabled: boolean) {
     //Declare needed variables
     let intensityScore = 0;
     let newZone: string = "";
@@ -16,6 +14,7 @@ export function convertToSongProperties(heartRate: number, cadence: number, prev
     let newLoudness: number;
     let valence = 0.3;
     let newDanceability: number;
+    let elapsedSeconds = (currentTime.getTime() - startTime.getTime()) /1000;
     //Update current HR zone
     for (let zones in hrIntensityTable) {
         if (!hrIntensityTable.hasOwnProperty(zones)) {
@@ -28,6 +27,7 @@ export function convertToSongProperties(heartRate: number, cadence: number, prev
         ) {
             //Update to new zone
             newZone = zones
+            console.log(newZone)
             break;
         } 
         
@@ -51,7 +51,7 @@ export function convertToSongProperties(heartRate: number, cadence: number, prev
     //Heart Rate zone comparison. If there's a match, check the time spent in that zone.
     let scaling = 1
     if (newZone == prevHrZone) {
-        scaling = checkHrDuration(currentTime, prevHrZone);
+        scaling = checkHrDuration(elapsedSeconds, prevHrZone);
         intensityScore = intensityScore * scaling
     } else {
 
@@ -99,7 +99,7 @@ export function convertToSongProperties(heartRate: number, cadence: number, prev
     }
     
     //Finally, return the song properties and the new time.
-    return [songProps, currentTime]
+    return songProps
 }
 function checkHrDuration(time: number, zone: string) {
     //Check which zone were in, then compare the times with that of the table.
