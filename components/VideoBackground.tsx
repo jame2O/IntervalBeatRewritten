@@ -25,6 +25,6 @@ const styles = StyleSheet.create({
     video: {
         width: Dimensions.get('screen').width,
         height: Dimensions.get('screen').height,
-        opacity: 0.5
+        opacity: 0.5,
     },
 });

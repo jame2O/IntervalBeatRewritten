@@ -3,7 +3,9 @@ const welcomeQuotes: string[] = [
     "Wow {user}, looking good!",
     "Good {timeOfDay}, {user}.",
     "Going for a PR today, {user}?",
-    "Lovely {timeOfDay} to get out there, {user}!"
+    "Lovely {timeOfDay} to get out there, {user}!",
+    "Out and about, are we?",
+    "{user}, ready to get stuck in?"
 ]
 
 export function buildQuote(user: string) {

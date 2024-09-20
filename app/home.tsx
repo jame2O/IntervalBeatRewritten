@@ -75,19 +75,8 @@ export default function Home() {
             <View>
                 <TitleBar/>
             </View>
-            <View style={styles.titleBarContainer}>
-                <Text style={styles.title}>{quote}</Text>
-                <Text style={styles.body_text}>Your Top 10 Songs: </Text>
-                <FlatList
-                    data={topSongs}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => <Text style={styles.body_text}>{item}</Text>}
-                />
-                <Text style={styles.body_text}>Your Top 10 Artists: </Text>
-                <FlatList
-                    data={topArtists}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => <Text style={styles.body_text}>{item}</Text>}></FlatList>
+            <View>
+                <Text style={styles.welcomeQuote}>{quote}</Text>
             </View>
         </View>
     )
@@ -97,12 +86,10 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         justifyContent: 'center',
     },
-    title: {
+    welcomeQuote: {
         fontFamily: 'Alumni-Sans-Italic',
         fontSize: 45,
+        padding: 15,
 
     },
-    body_text: {
-        fontFamily: 'InriaSans-Regular'
-    }
 })

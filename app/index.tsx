@@ -17,7 +17,7 @@ SplashScreen.preventAutoHideAsync();
 
 const client_id = 'cc256e16ace249129a34b80bbaaf3636'
 //Needs replacing time everytime device is switched.
-const redirect_uri = 'exp://co7elmm-james2o-8081.exp.direct'
+const redirect_uri = 'exp://172.22.46.185:8081' // Laptop: exp://172.22.46.185, PC: exp://co7elmm-james2o-8081.exp.direct
 const client_secret = 'ab54032ba4954cf2b6282a01933e05f1'
 
 //Save to secure storage base function.
@@ -65,6 +65,7 @@ export default function Login({navigation}: any) {
         const authCode = response.params.code;
         const accessToken = await fetchAccessToken(authCode, client_id, client_secret, redirect_uri);
         const userProfile = await fetchProfile(accessToken);
+        
         try {
           //Save auth code and access code to secure location.
           secureSave("auth_code", authCode);
