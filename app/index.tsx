@@ -12,9 +12,12 @@ import * as SecureStore from 'expo-secure-store'
 import VideoBackground from '../components/VideoBackground';
 import LoginButton from "../components/LoginButton";
 
+//Prevent splash screen from hiding automatically, wait for fonts to finish loading
+SplashScreen.preventAutoHideAsync();
+
 const client_id = 'cc256e16ace249129a34b80bbaaf3636'
 //Needs replacing time everytime device is switched.
-const redirect_uri = 'exp://172.22.46.185:8081'
+const redirect_uri = 'exp://co7elmm-james2o-8081.exp.direct'
 const client_secret = 'ab54032ba4954cf2b6282a01933e05f1'
 
 //Save to secure storage base function.
@@ -28,9 +31,8 @@ export default function Login({navigation}: any) {
   secureSave("redirect_uri", redirect_uri)
   //Setup hooks
   const [loaded, error] = useFonts({
-    'BebasNeue-Regular': require('../assets/fonts/BebasNeue-Regular.ttf'),
     'Alumni-Sans-Italic': require('../assets/fonts/static/AlumniSans-BoldItalic.ttf'),
-    'Alumni-Sans': require('../assets/fonts/static/AlumniSans-Light.ttf'),
+    'InriaSans-Regular': require('../assets/fonts/InriaSans-Regular.ttf')
   })
   const discovery = {
     authorizationEndpoint: 'https://accounts.spotify.com/authorize',
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
   },
   subheading: {
     color: 'white',
-    fontFamily: 'Alumni-Sans',
-    fontSize: 30
+    fontFamily: 'InriaSans-Regular',
+    fontSize: 25
   }
 })

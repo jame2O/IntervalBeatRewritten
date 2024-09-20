@@ -1,11 +1,18 @@
+//Import Required Libraries
+
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useFonts } from "expo-font";
 import { buildQuote } from "@/util/misc/welcomeQuotes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useEffect, useRef } from "react";
 import { userProfile } from "@/util/types/types";
-import { getSongTitlesApi } from "@/util/scripts/api";
+import { getSongTitles, getArtistTitles } from "@/util/scripts/api";
 import * as SecureStore from 'expo-secure-store';
+
+//Import Components
+
+import TitleBar from '../components/TitleBar'
+
 
 async function secureRetrieve(key:string) {
     let result = await SecureStore.getItemAsync(key);
@@ -17,13 +24,12 @@ async function secureRetrieve(key:string) {
 }
 export default function Home() {
     const userProfile = useRef<userProfile | null>(null);
-    const [quote, setQuote] = useState<string | null>("")
-    const [topSongs, setTopSongs] = useState<string[]>([])
+    const [quote, setQuote] = useState<string | null>("");
+    const [topSongs, setTopSongs] = useState<string[]>([]);
+    const [topArtists, setTopArtists] = useState<string[]>([]);
     const [loaded, error] = useFonts({
-        'BebasNeue-Regular': require('../assets/fonts/BebasNeue-Regular.ttf'),
         'Alumni-Sans-Italic': require('../assets/fonts/static/AlumniSans-BoldItalic.ttf'),
-        'Alumni-Sans-Bold': require('../assets/fonts/static/AlumniSans-Bold.ttf'),
-        'Alumni-Sans': require('../assets/fonts/static/AlumniSans-Light.ttf'),
+        'InriaSans-Regular': require('../assets/fonts/InriaSans-Regular.ttf'),
       });
 
     useEffect(() => {
@@ -45,31 +51,43 @@ export default function Home() {
         getUserProfile();
     }, []);
     useEffect(() => {
-        const getSongTitles = async () => {
+        const getSongArtistTitlesAsync = async () => {
             if (userProfile.current) {
                 //Retrieve access token
                 const accessToken = await secureRetrieve("access_token");
                 if (accessToken) {
-                    const songs = await getSongTitlesApi(accessToken, userProfile.current.profileData.topSongs)
+                    const songs = await getSongTitles(accessToken, userProfile.current.profileData.topSongs)
                     if (songs) {
                         setTopSongs(songs)
+                    }
+                    const artists = await getArtistTitles(accessToken, userProfile.current.profileData.topArtists)
+                    if (artists) {
+                        setTopArtists(artists)
                     }
                 }
             }
         }
-        getSongTitles()
+        getSongArtistTitlesAsync()
     }, [userProfile.current])
 
     return (
         <View>
+            <View>
+                <TitleBar/>
+            </View>
             <View style={styles.titleBarContainer}>
                 <Text style={styles.title}>{quote}</Text>
-                <Text>Your Top 10 Songs: </Text>
+                <Text style={styles.body_text}>Your Top 10 Songs: </Text>
                 <FlatList
                     data={topSongs}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => <Text>{item}</Text>}
+                    renderItem={({ item }) => <Text style={styles.body_text}>{item}</Text>}
                 />
+                <Text style={styles.body_text}>Your Top 10 Artists: </Text>
+                <FlatList
+                    data={topArtists}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => <Text style={styles.body_text}>{item}</Text>}></FlatList>
             </View>
         </View>
     )
@@ -83,5 +101,8 @@ const styles = StyleSheet.create({
         fontFamily: 'Alumni-Sans-Italic',
         fontSize: 45,
 
+    },
+    body_text: {
+        fontFamily: 'InriaSans-Regular'
     }
 })
