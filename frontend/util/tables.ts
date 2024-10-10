@@ -1,4 +1,4 @@
-//Format: [Min HR Percent, Min Intensity Score, Max Intensity Score]
+//Format: [Min HR Percent, Max HR Percent, Min Intensity Score, Max Intensity Score]
 export const hrIntensityTable = {
     'Z1': [0, 64, 20, 30],
     'Z2': [65, 79, 30, 40],
