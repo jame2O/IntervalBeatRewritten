@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 
+
 ## Declare flask and spotify url for requests
 
 app = Flask(__name__)
