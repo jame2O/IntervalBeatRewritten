@@ -64,6 +64,7 @@ export default function Login({navigation}: any) {
       const fetchData = async () => {
         console.log("Fetching data...")
         const authCode = response.params.code;
+        console.log(authCode)
         const accessToken = await fetchAccessToken(authCode, client_id, client_secret, redirect_uri);
         const userProfile = await fetchProfile(accessToken);
         

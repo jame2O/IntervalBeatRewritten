@@ -68,8 +68,7 @@ export default function Home() {
             }
         }
         getSongArtistTitlesAsync()
-    }, [userProfile.current])
-
+    }, [userProfile.current]);
     return (
         <View>
             <View>
